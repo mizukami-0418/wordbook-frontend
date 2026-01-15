@@ -1,3 +1,3 @@
-export default function PasswordDonePage() {
-  return <div>PasswordDonePage</div>;
+export default function PasswordPage() {
+  return <div>PasswordPage</div>;
 }
