@@ -9,6 +9,8 @@ import { createClient } from "@/lib/supabase/client";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
+console.log("API URL:", API_URL);
+
 // Axiosインスタンスを作成
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -27,6 +29,8 @@ apiClient.interceptors.request.use(
     const {
       data: { session },
     } = await supabase.auth.getSession();
+
+    console.log("Current Supabase session:", session);
 
     if (session?.access_token) {
       // AuthorizationヘッダーにSupabase JWTを設定

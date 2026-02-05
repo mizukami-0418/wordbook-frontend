@@ -19,9 +19,9 @@ export default function ProfilePage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // userが取得されたら初期値をセット
-  if (user && username === "") {
-    setUsername(user.username);
-  }
+  // if (user && username === "") {
+  //   setUsername(user.username);
+  // }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -93,9 +93,10 @@ export default function ProfilePage() {
 
           {/* ユーザー名 */}
           <div className="space-y-2">
-            <Label htmlFor="username">ユーザー名</Label>
+            <Label htmlFor="username">ユーザー名：{user?.username}</Label>
             <Input
               id="username"
+              placeholder="更新するならこちらに入力"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
