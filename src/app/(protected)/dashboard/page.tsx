@@ -43,8 +43,19 @@ export default function DashboardPage() {
             </span>
           </div>
           <Button asChild variant="outline" className="w-full mt-4">
-            <Link href="/dictionary" className="text-blue-500 hover:underline">
-              辞書モードで始める
+            <Link
+              href="/dictionary/search"
+              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+            >
+              DICTIONARY MODEで始める
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full mt-4">
+            <Link
+              href="/dictionary/words"
+              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+            >
+              単語一覧を見る
             </Link>
           </Button>
         </div>

@@ -10,6 +10,7 @@ import type { Word } from "@/types/dictionary";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 export default function DictionarySearchPage() {
   const [query, setQuery] = useState("");
@@ -17,6 +18,7 @@ export default function DictionarySearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
+  const router = useRouter();
 
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
@@ -47,10 +49,13 @@ export default function DictionarySearchPage() {
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="flex items-center gap-4">
+        <Button variant="outline" onClick={() => router.back()}>
+          ← 戻る
+        </Button>
         <h1 className="text-2xl font-bold">単語検索</h1>
-        <p className="text-gray-500 mt-1">英語または日本語で検索できます</p>
       </div>
+      <p className="text-gray-500 mt-1">英語または日本語で検索できます</p>
 
       {/* 検索フォーム */}
       <Card>

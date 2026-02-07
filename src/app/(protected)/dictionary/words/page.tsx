@@ -9,6 +9,7 @@ import { getWords, getLevels } from "@/lib/api/dictionary";
 import type { Word, Level } from "@/types/dictionary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function WordsListPage() {
   const [words, setWords] = useState<Word[]>([]);
@@ -16,6 +17,7 @@ export default function WordsListPage() {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -71,10 +73,13 @@ export default function WordsListPage() {
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="flex items-center gap-4">
+        <Button variant="outline" onClick={() => router.back()}>
+          ← 戻る
+        </Button>
         <h1 className="text-2xl font-bold">単語一覧</h1>
-        <p className="text-gray-500 mt-1">登録されている単語の一覧です</p>
       </div>
+      <p className="text-gray-500 mt-1">登録されている単語の一覧です</p>
 
       {/* レベルフィルター */}
       <Card>
