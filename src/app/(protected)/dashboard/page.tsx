@@ -2,7 +2,9 @@
 
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/useUser";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const { user, loading, error } = useUser();
@@ -40,6 +42,11 @@ export default function DashboardPage() {
               アクティブ
             </span>
           </div>
+          <Button asChild variant="outline" className="w-full mt-4">
+            <Link href="/dictionary" className="text-blue-500 hover:underline">
+              辞書モードで始める
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
