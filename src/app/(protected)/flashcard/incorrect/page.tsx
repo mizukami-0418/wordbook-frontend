@@ -489,7 +489,7 @@ export default function FlashcardIncorrectWordsPage() {
 
   if (loading && incorrectWords.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <p className="text-muted-foreground">読み込み中...</p>
       </div>
     );
@@ -677,7 +677,7 @@ export default function FlashcardIncorrectWordsPage() {
                           {wordStatus.mode === "en" ? "🇯🇵 → 🇬🇧" : "🇬🇧 → 🇯🇵"}
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-xl sm:text-2xl font-bold text-foreground break-words">
+                          <h3 className="text-xl sm:text-2xl font-bold text-foreground wrap-break-words">
                             {wordStatus.word.english}
                           </h3>
                           <p className="text-base sm:text-lg text-muted-foreground mt-1">

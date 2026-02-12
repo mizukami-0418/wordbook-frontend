@@ -55,48 +55,93 @@
 // }
 
 // src/app/auth/callback/route.ts
+// OAuth/Email認証後のコールバック処理
+
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-
-// 許可するリダイレクト先のホワイトリスト
-const ALLOWED_REDIRECT_PATHS = [
-  "/dashboard",
-  "/profile",
-  "/flashcard/start",
-  "/dictionary/search",
-];
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next");
 
+  console.log("🔄 Auth callback triggered");
+  console.log("📍 Origin:", origin);
+  console.log("🔑 Code:", code ? "present" : "missing");
+  console.log("➡️  Next param:", next);
+
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // redirect_to の検証
-      if (next) {
-        // 相対パスかつホワイトリストに含まれているかチェック
-        const isRelativePath = next.startsWith("/") && !next.startsWith("//");
-        const isAllowedPath = ALLOWED_REDIRECT_PATHS.some((path) =>
-          next.startsWith(path),
-        );
+      // ユーザー情報を取得
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        if (isRelativePath && isAllowedPath) {
+      console.log("👤 User authenticated");
+      console.log("🔐 Provider:", user?.app_metadata?.provider);
+      console.log("📧 Email:", user?.email);
+
+      // Google OAuth認証の場合
+      if (user?.app_metadata?.provider === "google") {
+        console.log("🔵 Google OAuth detected");
+
+        try {
+          // DRF APIでプロフィールチェック
+          const session = await supabase.auth.getSession();
+          const apiUrl =
+            process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
+          const response = await fetch(`${apiUrl}/api/user/profile/`, {
+            headers: {
+              Authorization: `Bearer ${session.data.session?.access_token}`,
+            },
+          });
+
+          console.log("📊 Profile check status:", response.status);
+
+          if (response.ok) {
+            const profile = await response.json();
+            console.log("✅ Profile exists:", !!profile.username);
+
+            if (profile.username) {
+              // プロフィール完成済み → ダッシュボードへ
+              console.log("➡️  Redirecting to: /dashboard");
+              return NextResponse.redirect(`${origin}/dashboard`);
+            }
+          }
+        } catch (err) {
+          console.error("❌ Profile check error:", err);
+        }
+
+        // プロフィール未完成 → complete-profileへ
+        console.log("➡️  Redirecting to: /complete-profile");
+        return NextResponse.redirect(`${origin}/complete-profile`);
+      }
+
+      // Email認証の場合（パスワード設定が必要）
+      console.log("📧 Email authentication detected");
+
+      // redirect_to パラメータがあればそれを優先
+      if (next) {
+        const isRelativePath = next.startsWith("/") && !next.startsWith("//");
+        if (isRelativePath) {
+          console.log("➡️  Redirecting to:", next);
           return NextResponse.redirect(`${origin}${next}`);
         }
       }
 
-      // デフォルト（Email confirm用）
+      // デフォルト: パスワード設定ページへ
+      console.log("➡️  Redirecting to: /set-password");
       return NextResponse.redirect(`${origin}/set-password`);
     }
 
-    // 認証エラー時のログ（本番環境では適切なロギングサービスを使用）
-    console.error("Auth callback error:", error);
+    console.error("❌ Auth error:", error);
   }
 
   // エラー時はログインページへ
+  console.log("➡️  Redirecting to: /login (error)");
   return NextResponse.redirect(`${origin}/login`);
 }
