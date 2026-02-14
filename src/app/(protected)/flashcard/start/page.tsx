@@ -154,7 +154,7 @@ export default function FlashcardStartPage() {
                       mode.value as "normal" | "test" | "replay",
                     )
                   }
-                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all ${
+                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all cursor-pointer ${
                     selectedQuizMode === mode.value
                       ? "border-primary bg-primary/10 dark:bg-primary/20 shadow-lg scale-105"
                       : "border-border hover:border-primary/50 dark:hover:border-primary bg-card"
@@ -184,7 +184,7 @@ export default function FlashcardStartPage() {
                 <button
                   key={level.id}
                   onClick={() => setSelectedLevel(level.id)}
-                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all ${
+                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all cursor-pointer ${
                     selectedLevel === level.id
                       ? "border-purple-600 bg-purple-500/10 dark:bg-purple-500/20 shadow-lg scale-105"
                       : "border-border hover:border-purple-500/50 dark:hover:border-purple-500 bg-card"
@@ -209,7 +209,7 @@ export default function FlashcardStartPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <button
                 onClick={() => setSelectedMode("en")}
-                className={`p-4 sm:p-6 rounded-xl border-2 transition-all ${
+                className={`p-4 sm:p-6 rounded-xl border-2 transition-all cursor-pointer ${
                   selectedMode === "en"
                     ? "border-green-600 bg-green-500/10 dark:bg-green-500/20 shadow-lg scale-105"
                     : "border-border hover:border-green-500/50 dark:hover:border-green-500 bg-card"
@@ -226,7 +226,7 @@ export default function FlashcardStartPage() {
 
               <button
                 onClick={() => setSelectedMode("jp")}
-                className={`p-4 sm:p-6 rounded-xl border-2 transition-all ${
+                className={`p-4 sm:p-6 rounded-xl border-2 transition-all cursor-pointer ${
                   selectedMode === "jp"
                     ? "border-green-600 bg-green-500/10 dark:bg-green-500/20 shadow-lg scale-105"
                     : "border-border hover:border-green-500/50 dark:hover:border-green-500 bg-card"

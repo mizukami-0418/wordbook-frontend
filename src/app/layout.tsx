@@ -53,8 +53,8 @@ export default function RootLayout({
           bg-background
           text-foreground`}
       >
-        {/* <Header /> */}
-        <main className="min-h-screen">{children}</main>
+        {children}
+        <Footer />
       </body>
     </html>
   );

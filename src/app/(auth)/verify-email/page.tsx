@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 
 export default function VerifyEmailPage() {
   return (
-    <div className="w-full max-w-md mx-auto px-4 sm:px-0">
+    <div className="w-full max-w-md mx-auto py-6">
       <Card className="border-2 border-border shadow-2xl">
         <CardHeader className="text-center space-y-3 pb-6 bg-linear-to-br from-primary/5 to-purple-500/5 dark:from-primary/10 dark:to-purple-500/10 border-b border-border">
           {/* アイコン */}
