@@ -91,10 +91,9 @@ export async function GET(request: Request) {
         try {
           // DRF APIでプロフィールチェック
           const session = await supabase.auth.getSession();
-          const apiUrl =
-            process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-          const response = await fetch(`${apiUrl}/api/user/profile/`, {
+          const response = await fetch(`${apiUrl}/accounts/profile/`, {
             headers: {
               Authorization: `Bearer ${session.data.session?.access_token}`,
             },
