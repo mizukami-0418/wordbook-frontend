@@ -236,7 +236,6 @@ export default function HomePage() {
           </Card>
         </section>
       </main>
-      <Footer />
     </>
   );
 }
@@ -374,5 +373,4 @@ function BenefitCard({
 
 // Search アイコンのインポート追加
 import { Search } from "lucide-react";
-import Footer from "@/components/layout/Footer";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
