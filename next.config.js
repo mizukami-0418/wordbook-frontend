@@ -38,9 +38,9 @@ const nextConfig = {
   },
 
   // 画像最適化設定
-  images: {
-    domains: ["localhost"],
-  },
+  // images: {
+  //   domains: ["localhost"],
+  // },
 };
 
 module.exports = nextConfig;
