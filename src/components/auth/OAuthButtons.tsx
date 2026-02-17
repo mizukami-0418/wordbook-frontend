@@ -16,11 +16,25 @@ export default function OAuthButtons() {
     setLoading(provider);
     setError(null);
 
+    // try {
+    //   const { error: supabaseError } = await supabase.auth.signInWithOAuth({
+    //     provider,
+    //     options: {
+    //       redirectTo: `${getBaseUrl()}/auth/callback`,
+    //     },
+    //   });
     try {
       const { error: supabaseError } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${getBaseUrl()}/auth/callback`,
+          // PKCEフローをスキップ（スマホ対応）
+          // code_verifierをlocalStorageではなくCookieで管理
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+          skipBrowserRedirect: false,
         },
       });
 
