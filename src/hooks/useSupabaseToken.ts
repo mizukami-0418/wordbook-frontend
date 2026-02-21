@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 export function useSupabaseToken() {
   const [token, setToken] = useState<string | null>(null);
@@ -25,9 +26,17 @@ export function useSupabaseToken() {
     // トークンの変更を監視
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setToken(session?.access_token ?? null);
-    });
+    } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        setToken(session?.access_token ?? null);
+      },
+    );
+
+    // const {
+    //   data: { subscription },
+    // } = supabase.auth.onAuthStateChange((_event, session) => {
+    //   setToken(session?.access_token ?? null);
+    // });
 
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
