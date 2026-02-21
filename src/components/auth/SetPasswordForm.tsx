@@ -7,6 +7,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { setPasswordSchema } from "@/lib/validations";
+import apiClient from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -72,17 +73,68 @@ export default function SetPasswordForm() {
         return;
       }
 
+      console.log("👤 Setting password for user:", user.email);
+
       // パスワード更新
       const { error: supabaseError } = await supabase.auth.updateUser({
         password,
       });
 
       if (supabaseError) {
+        console.error("❌ Password update error:", supabaseError);
         setError(supabaseError.message);
         return;
       }
 
-      // パスワード設定完了 → ダッシュボードにリダイレクト
+      console.log("✅ Password updated successfully");
+
+      // DRF APIでユーザー作成/取得
+      try {
+        console.log("🔄 Syncing user with DRF API...");
+
+        // プロフィール確認
+        const profileResponse = await apiClient.get("/accounts/profile/");
+
+        if (profileResponse.status === 200) {
+          console.log("✅ User profile exists:", profileResponse.data);
+
+          // usernameが設定されている場合はダッシュボードへ
+          if (profileResponse.data.username) {
+            console.log("➡️  Redirecting to /dashboard");
+            router.push("/dashboard");
+            return;
+          } else {
+            // usernameが未設定の場合はプロフィール完成ページへ
+            console.log("➡️  Redirecting to /complete-profile");
+            router.push("/complete-profile");
+            return;
+          }
+        }
+      } catch (apiError: any) {
+        console.log("📡 Profile check status:", apiError.response?.status);
+
+        if (apiError.response?.status === 404) {
+          // プロフィールが存在しない → 新規ユーザー → プロフィール完成へ
+          console.log(
+            "ℹ️  Profile not found - redirecting to /complete-profile",
+          );
+          router.push("/complete-profile");
+          return;
+        } else if (apiError.response?.status === 401) {
+          // 認証エラー
+          console.error("❌ JWT authentication failed");
+          setError("認証に失敗しました。再度ログインしてください。");
+          return;
+        } else {
+          // その他のエラーでもプロフィール完成ページへ進む
+          console.warn("⚠️  API error, but proceeding to /complete-profile");
+          router.push("/complete-profile");
+          return;
+        }
+      }
+
+      // フォールバック: ダッシュボードへ
+      console.log("➡️  Fallback: Redirecting to /dashboard");
       router.push("/dashboard");
     } catch {
       setError("予期しないエラーが発生しました。再度お試しください。");

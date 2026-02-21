@@ -1,5 +1,5 @@
 // src/lib/supabase/server.ts
-// サーバーサイドSupabaseクライアント（モバイル対応）
+// サーバー用 Supabase クライアント（Server Components / Route Handlers / Server Actions）
 
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
@@ -20,21 +20,16 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, {
                 ...options,
-                // モバイルブラウザ対応の設定
-                sameSite: "lax", // 'strict'より緩く、モバイルで動作しやすい
-                secure: process.env.NODE_ENV === "production",
-                httpOnly: true,
                 path: "/",
-                maxAge: 60 * 60 * 24 * 7, // 7日間
+                maxAge: options?.maxAge ?? 60 * 60 * 24 * 7, // 7日
+                sameSite: "lax",
+                secure: process.env.NODE_ENV === "production",
+                // クライアントで getSession() するため JS から読めるようにする
+                httpOnly: false,
               });
             });
-          } catch (error) {
-            // Server Componentからsetを呼ぶとエラーになる場合がある
-            // その場合はミドルウェアで処理される
-            console.error(
-              "Cookie set error (expected in some contexts):",
-              error,
-            );
+          } catch {
+            // Server Component 内で set するとエラーになることがある（ミドルウェアで更新される）
           }
         },
       },

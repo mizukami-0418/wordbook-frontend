@@ -28,13 +28,10 @@ export default function OAuthButtons() {
         provider,
         options: {
           redirectTo: `${getBaseUrl()}/auth/callback`,
-          // PKCEフローをスキップ（スマホ対応）
-          // code_verifierをlocalStorageではなくCookieで管理
           queryParams: {
             access_type: "offline",
             prompt: "consent",
           },
-          skipBrowserRedirect: false,
         },
       });
 

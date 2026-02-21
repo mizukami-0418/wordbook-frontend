@@ -205,10 +205,15 @@ export default function SignupForm() {
         password: generateTemporaryPassword(),
         options: {
           emailRedirectTo: `${getBaseUrl()}/set-password`,
+          // メール確認が必要
+          data: {
+            email_confirmed: false,
+          },
         },
       });
 
       if (supabaseError) {
+        // 既に登録されているメールアドレス
         if (supabaseError.message.includes("already registered")) {
           setError(
             "このメールアドレスは既に登録されています。ログインページをお使いください。",
