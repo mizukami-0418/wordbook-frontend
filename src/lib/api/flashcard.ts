@@ -51,14 +51,39 @@ export async function startQuiz(
 /**
  * 回答を送信
  */
+// export a
 export async function submitAnswer(
   data: SubmitAnswerRequest,
 ): Promise<SubmitAnswerResponse> {
-  const response = await apiClient.post<SubmitAnswerResponse>(
-    "/flashcard/quiz/answer/",
-    data,
-  );
-  return response.data;
+  try {
+    console.log("📤 Submitting answer:", data);
+
+    const response = await apiClient.post<SubmitAnswerResponse>(
+      "/flashcard/quiz/answer/",
+      data,
+    );
+
+    console.log("✅ Answer submitted successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Submit answer error:", error);
+
+    // エラーの詳細をログ出力
+    if (error && typeof error === "object" && "response" in error) {
+      const axiosError = error as {
+        response?: {
+          status?: number;
+          data?: unknown;
+          headers?: Record<string, string>;
+        };
+      };
+      console.error("   Status:", axiosError.response?.status);
+      console.error("   Data:", axiosError.response?.data);
+      console.error("   Headers:", axiosError.response?.headers);
+    }
+
+    throw error;
+  }
 }
 
 /**

@@ -56,6 +56,9 @@ export interface SubmitAnswerResponse {
   is_completed: boolean;
   correct_rate?: number;
   next_question: QuizQuestion | null;
+  // 品詞や成句も追加
+  phrase?: string;
+  part_of_speech?: string;
 }
 
 export interface Statistics {

@@ -110,28 +110,58 @@ export default function SetPasswordForm() {
             return;
           }
         }
-      } catch (apiError: any) {
-        console.log("📡 Profile check status:", apiError.response?.status);
+      } catch (apiError: unknown) {
+        // Axiosエラーの型チェック
+        if (
+          apiError &&
+          typeof apiError === "object" &&
+          "response" in apiError
+        ) {
+          const error = apiError as { response?: { status?: number } };
+          console.log("📡 Profile check status:", error.response?.status);
 
-        if (apiError.response?.status === 404) {
-          // プロフィールが存在しない → 新規ユーザー → プロフィール完成へ
-          console.log(
-            "ℹ️  Profile not found - redirecting to /complete-profile",
-          );
-          router.push("/complete-profile");
-          return;
-        } else if (apiError.response?.status === 401) {
-          // 認証エラー
-          console.error("❌ JWT authentication failed");
-          setError("認証に失敗しました。再度ログインしてください。");
-          return;
-        } else {
-          // その他のエラーでもプロフィール完成ページへ進む
-          console.warn("⚠️  API error, but proceeding to /complete-profile");
-          router.push("/complete-profile");
-          return;
+          if (error.response?.status === 404) {
+            // プロフィールが存在しない → 新規ユーザー → プロフィール完成へ
+            console.log(
+              "ℹ️  Profile not found - redirecting to /complete-profile",
+            );
+            router.push("/complete-profile");
+            return;
+          } else if (error.response?.status === 401) {
+            // 認証エラー
+            console.error("❌ JWT authentication failed");
+            setError("認証に失敗しました。再度ログインしてください。");
+            return;
+          }
         }
+
+        // その他のエラーでもプロフィール完成ページへ進む
+        console.warn("⚠️  API error, but proceeding to /complete-profile");
+        router.push("/complete-profile");
+        return;
       }
+      // } catch (apiError: any) {
+      //   console.log("📡 Profile check status:", apiError.response?.status);
+
+      //   if (apiError.response?.status === 404) {
+      //     // プロフィールが存在しない → 新規ユーザー → プロフィール完成へ
+      //     console.log(
+      //       "ℹ️  Profile not found - redirecting to /complete-profile",
+      //     );
+      //     router.push("/complete-profile");
+      //     return;
+      //   } else if (apiError.response?.status === 401) {
+      //     // 認証エラー
+      //     console.error("❌ JWT authentication failed");
+      //     setError("認証に失敗しました。再度ログインしてください。");
+      //     return;
+      //   } else {
+      //     // その他のエラーでもプロフィール完成ページへ進む
+      //     console.warn("⚠️  API error, but proceeding to /complete-profile");
+      //     router.push("/complete-profile");
+      //     return;
+      //   }
+      // }
 
       // フォールバック: ダッシュボードへ
       console.log("➡️  Fallback: Redirecting to /dashboard");

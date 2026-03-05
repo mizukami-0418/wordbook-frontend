@@ -15,7 +15,15 @@ import type {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Pause, Trophy, AlertCircle, PartyPopper, Frown } from "lucide-react";
+import {
+  Pause,
+  Trophy,
+  AlertCircle,
+  PartyPopper,
+  Frown,
+  BookOpen,
+  MessageSquare,
+} from "lucide-react";
 
 export default function FlashcardResumePage() {
   const params = useParams();
@@ -66,10 +74,13 @@ export default function FlashcardResumePage() {
         progress_id: progress.id,
         answer: answer.trim(),
       });
+      console.log("回答送信結果:", result);
 
       setFeedback(result);
       setShowAnswer(true);
       setCardFlipped(true);
+
+      console.log("Feedback:", feedback);
 
       setTimeout(() => {
         if (result.is_completed) {
@@ -84,7 +95,7 @@ export default function FlashcardResumePage() {
             prev ? { ...prev, score: result.score } : null,
           );
         }
-      }, 2000);
+      }, 3000);
     } catch (err: unknown) {
       if (isAxiosError(err)) {
         setError(err.response?.data?.detail || "回答の送信に失敗しました");
@@ -271,6 +282,33 @@ export default function FlashcardResumePage() {
                       <p className="text-xl sm:text-2xl lg:text-3xl text-muted-foreground wrap-break-words">
                         {feedback.correct_answer}
                       </p>
+
+                      {/* 品詞とフレーズの表示 */}
+                      <div className="mt-6 space-y-3 max-w-2xl mx-auto">
+                        {/* 品詞 */}
+                        {feedback.part_of_speech && (
+                          <div className="flex items-center justify-center gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                            <span className="font-medium">品詞:</span>
+                            <span className="font-semibold text-foreground">
+                              {feedback.part_of_speech}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* フレーズ */}
+                        {feedback.phrase && (
+                          <div className="flex items-start gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5" />
+                            <div className="text-left flex-1">
+                              <span className="font-medium">例文:</span>
+                              <p className="text-foreground mt-1 wrap-break-words">
+                                {feedback.phrase}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div className="text-center">
@@ -286,6 +324,33 @@ export default function FlashcardResumePage() {
                       <p className="text-xl sm:text-2xl lg:text-3xl text-foreground font-bold wrap-break-words">
                         正解: {feedback?.correct_answer}
                       </p>
+
+                      {/* 品詞とフレーズの表示（不正解時） */}
+                      <div className="mt-6 space-y-3 max-w-2xl mx-auto">
+                        {/* 品詞 */}
+                        {feedback?.part_of_speech && (
+                          <div className="flex items-center justify-center gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                            <span className="font-medium">品詞:</span>
+                            <span className="font-semibold text-foreground">
+                              {feedback.part_of_speech}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* フレーズ */}
+                        {feedback?.phrase && (
+                          <div className="flex items-start gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5" />
+                            <div className="text-left flex-1">
+                              <span className="font-medium">例文:</span>
+                              <p className="text-foreground mt-1 wrap-break-words">
+                                {feedback.phrase}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>

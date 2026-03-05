@@ -62,7 +62,7 @@ export default function DebugTokenPage() {
               <div className="text-sm text-gray-500">
                 <p>このトークンを使ってDjangoでデバッグしてください：</p>
                 <code className="block mt-2 bg-gray-100 p-2 rounded">
-                  python manage.py debug_jwt "{token.substring(0, 50)}..."
+                  {`python manage.py debug_jwt "${token.substring(0, 50)}..."`}
                 </code>
               </div>
             </>

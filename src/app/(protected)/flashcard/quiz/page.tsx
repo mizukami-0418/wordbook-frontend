@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { startQuiz, submitAnswer, pauseQuiz } from "@/lib/api/flashcard";
@@ -15,11 +15,20 @@ import type {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Pause, Trophy, AlertCircle, PartyPopper, Frown } from "lucide-react";
+import {
+  Pause,
+  Trophy,
+  AlertCircle,
+  PartyPopper,
+  Frown,
+  BookOpen,
+  MessageSquare,
+} from "lucide-react";
 
 export default function FlashcardQuizPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const hasInitialized = useRef(false);
 
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<QuizQuestion | null>(
@@ -33,6 +42,10 @@ export default function FlashcardQuizPage() {
   const [cardFlipped, setCardFlipped] = useState(false);
 
   useEffect(() => {
+    // 既に初期化済みならスキップ
+    if (hasInitialized.current) return;
+    hasInitialized.current = true; // ← フラグを立てる
+
     async function initQuiz() {
       const levelId = searchParams.get("level");
       const mode = searchParams.get("mode") as "en" | "jp";
@@ -96,7 +109,7 @@ export default function FlashcardQuizPage() {
             prev ? { ...prev, score: result.score } : null,
           );
         }
-      }, 2000);
+      }, 3000);
     } catch (err: unknown) {
       if (isAxiosError(err)) {
         setError(err.response?.data?.detail || "回答の送信に失敗しました");
@@ -283,6 +296,32 @@ export default function FlashcardQuizPage() {
                       <p className="text-xl sm:text-2xl lg:text-3xl text-muted-foreground wrap-break-words">
                         {feedback.correct_answer}
                       </p>
+                      {/* 品詞とフレーズの表示 */}
+                      <div className="mt-6 space-y-3 max-w-2xl mx-auto">
+                        {/* 品詞 */}
+                        {feedback.part_of_speech && (
+                          <div className="flex items-center justify-center gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                            <span className="font-medium">品詞:</span>
+                            <span className="font-semibold text-foreground">
+                              {feedback.part_of_speech}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* フレーズ */}
+                        {feedback.phrase && (
+                          <div className="flex items-start gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5" />
+                            <div className="text-left flex-1">
+                              <span className="font-medium">例文:</span>
+                              <p className="text-foreground mt-1 wrap-break-words">
+                                {feedback.phrase}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div className="text-center">
@@ -298,6 +337,33 @@ export default function FlashcardQuizPage() {
                       <p className="text-xl sm:text-2xl lg:text-3xl text-foreground font-bold wrap-break-words">
                         正解: {feedback?.correct_answer}
                       </p>
+
+                      {/* 品詞とフレーズの表示（不正解時） */}
+                      <div className="mt-6 space-y-3 max-w-2xl mx-auto">
+                        {/* 品詞 */}
+                        {feedback?.part_of_speech && (
+                          <div className="flex items-center justify-center gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                            <span className="font-medium">品詞:</span>
+                            <span className="font-semibold text-foreground">
+                              {feedback.part_of_speech}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* フレーズ */}
+                        {feedback?.phrase && (
+                          <div className="flex items-start gap-2 text-sm sm:text-base text-muted-foreground bg-muted/30 dark:bg-muted/20 rounded-lg p-3">
+                            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5" />
+                            <div className="text-left flex-1">
+                              <span className="font-medium">例文:</span>
+                              <p className="text-foreground mt-1 wrap-break-words">
+                                {feedback.phrase}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
