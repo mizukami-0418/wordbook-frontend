@@ -18,22 +18,6 @@ export function useAuth() {
   const supabase = createClient();
 
   useEffect(() => {
-    // 初回セッション取得
-    // supabase.auth.getSession().then(({ data: { session } }) => {
-    //   setSession(session);
-    //   setUser(session?.user ?? null);
-    //   setLoading(false);
-    // });
-
-    // 認証状態の変更を監視
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange((_event, session) => {
-    //   setSession(session);
-    //   setUser(session?.user ?? null);
-    //   setLoading(false);
-    // });
-
     supabase.auth
       .getSession()
       .then(({ data: { session } }: { data: { session: Session | null } }) => {

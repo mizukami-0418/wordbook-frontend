@@ -51,13 +51,10 @@ export async function startQuiz(
 /**
  * 回答を送信
  */
-// export a
 export async function submitAnswer(
   data: SubmitAnswerRequest,
 ): Promise<SubmitAnswerResponse> {
   try {
-    console.log("📤 Submitting answer:", data);
-
     const response = await apiClient.post<SubmitAnswerResponse>(
       "/flashcard/quiz/answer/",
       data,

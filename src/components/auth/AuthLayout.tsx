@@ -16,9 +16,6 @@ export default function AuthLayout({
       <AuthNavigationBar />
 
       {/* コンテンツ */}
-      {/* <main className="flex-1 max-w-7xl mx-auto w-full">
-        {children}
-      </main> */}
 
       {children}
     </div>

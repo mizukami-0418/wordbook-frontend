@@ -36,7 +36,6 @@ export function useUser() {
         const status = await checkProfileCompletion();
         setProfileStatus(status);
       } catch (err: unknown) {
-        console.error("ユーザー情報の取得に失敗:", err);
         setError(getErrorMessage(err, "ユーザー情報の取得に失敗しました"));
       } finally {
         setLoading(false);
@@ -58,7 +57,6 @@ export function useUser() {
       const status = await checkProfileCompletion();
       setProfileStatus(status);
     } catch (err: unknown) {
-      console.error("ユーザー情報の取得に失敗:", err);
       setError(getErrorMessage(err, "ユーザー情報の取得に失敗しました"));
     } finally {
       setLoading(false);

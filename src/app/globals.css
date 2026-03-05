@@ -121,5 +121,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* デフォルトフォント: Kosugi Maru */
+    font-family: var(--font-kosugi-maru), sans-serif;
+  }
+  /* 見出し用フォント:  M PLUS Rounded 1c  */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-m-plus-rounded-1c), sans-serif;
   }
 }

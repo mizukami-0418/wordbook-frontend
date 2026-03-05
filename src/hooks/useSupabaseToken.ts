@@ -32,12 +32,6 @@ export function useSupabaseToken() {
       },
     );
 
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange((_event, session) => {
-    //   setToken(session?.access_token ?? null);
-    // });
-
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 

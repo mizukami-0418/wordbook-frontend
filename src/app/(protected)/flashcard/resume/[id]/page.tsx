@@ -74,13 +74,10 @@ export default function FlashcardResumePage() {
         progress_id: progress.id,
         answer: answer.trim(),
       });
-      console.log("回答送信結果:", result);
 
       setFeedback(result);
       setShowAnswer(true);
       setCardFlipped(true);
-
-      console.log("Feedback:", feedback);
 
       setTimeout(() => {
         if (result.is_completed) {
@@ -114,7 +111,12 @@ export default function FlashcardResumePage() {
       await pauseQuiz(progress.id);
       router.push("/flashcard/paused");
     } catch (err: unknown) {
-      console.error("中断に失敗:", err);
+      setError(
+        "中断に失敗:" +
+          (isAxiosError(err)
+            ? err.response?.data?.detail || err.message
+            : "不明なエラー"),
+      );
     }
   };
 
